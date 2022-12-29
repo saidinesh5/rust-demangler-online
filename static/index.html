@@ -2,9 +2,32 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Rust + Webpack project!</title>
+    <title>Rust Demangler!</title>
+    <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
     <script src="index.js"></script>
+    <script>
+      window.onload = async () =>{
+        const demangler = await window.rust_demangler.default()
+        let demangle = () => {
+          let raw = document.getElementById("mangledsymbols").value.trim()
+
+          try {
+            document.getElementById("demangledoutput").value = demangler(raw)
+          } catch (e) {
+            alert(e)
+          }
+        }
+        document.getElementById("demanglebutton").onclick = demangle
+        demangle()
+      }
+    </script>
+    <div class="grid">
+      <div class="header"><h1>Rust Demangler</h1><p>Demangling for Rust symbols, written in Rust and compiled to WebAssembly.</p></div>
+      <textarea id="mangledsymbols" class="left">_ZN3foo3barE</textarea>
+      <textarea id="demangledoutput" class="right" disabled></textarea>
+      <button id="demanglebutton" class="footer">Demangle</button>
+    </div>
   </body>
 </html>

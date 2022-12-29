@@ -11,15 +11,24 @@ module.exports = {
   },
   output: {
     path: dist,
-    filename: "[name].js"
+    filename: "[name].js",
+    library: 'rust_demangler',
+    libraryTarget: 'window'
   },
   devServer: {
-    contentBase: dist,
+    static: {
+      directory: dist
+    },
+  },
+  experiments: {
+    asyncWebAssembly: true
   },
   plugins: [
-    new CopyPlugin([
-      path.resolve(__dirname, "static")
-    ]),
+    new CopyPlugin({
+      patterns: [
+        path.resolve(__dirname, "static")
+      ]
+    }),
 
     new WasmPackPlugin({
       crateDirectory: __dirname,

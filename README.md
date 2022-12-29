@@ -1,3 +1,7 @@
+# Rust Demangler Online
+
+Use webassembly to make use of Rust's symbol demangler in your browser.
+
 ## How to install
 
 ```sh
