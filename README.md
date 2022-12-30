@@ -2,6 +2,8 @@
 
 Use webassembly to make use of Rust's symbol demangler in your browser.
 
+![Rust Demangler Online](https://dinesh.cloud/assets/2022-12-30-announcing-rust-demangler-online.png "Rust Demangler Online")
+
 ## How to install
 
 ```sh
