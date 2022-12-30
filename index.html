@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rust Demangler!</title>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <script src="index.js"></script>
+    <script>
+      window.onload = async () =>{
+        const demangler = await window.rust_demangler.default()
+        let demangle = () => {
+          let raw = document.getElementById("mangledsymbols").value.trim()
+
+
+          // If it is a single line, assume that the user directly pasted a
+          // mangled symbol
+          if (raw.indexOf('\n') == -1) {
+            try {
+              document.getElementById("demangledoutput").value = demangler(raw)
+            } catch (e) {
+              alert(e)
+            }
+          } else {
+            // Otherwise, the user might have pasted a whole backtrace...
+            // So look for mangled names like text and try to demangle them
+            // TODO: Add support for legacy mangling scheme
+            const regexp = /(_R[a-zA-Z_0-9]+)/g
+            const symbols = [...raw.match(regexp)]
+            for (let s of symbols) {
+              if (s.length > 0) {
+                try {
+                  raw = raw.replace(s, demangler(s.trim('_')))
+                } catch (e) {
+                  console.log("Ignoring .. " + s)
+                }
+              }
+            }
+            document.getElementById("demangledoutput").value = raw
+          }
+        }
+        document.getElementById("demanglebutton").onclick = demangle
+        demangle()
+      }
+    </script>
+    <div class="grid">
+      <div class="header"><h1>Rust Demangler</h1><p>Demangling for Rust symbols, written in Rust and compiled to WebAssembly.</p></div>
+      <textarea id="mangledsymbols" class="left">_ZN3foo3barE</textarea>
+      <textarea id="demangledoutput" class="right" disabled></textarea>
+      <button id="demanglebutton" class="footer">Demangle</button>
+    </div>
+  </body>
+</html>
